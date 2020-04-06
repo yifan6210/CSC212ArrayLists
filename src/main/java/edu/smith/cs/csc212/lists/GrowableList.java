@@ -2,6 +2,7 @@ package edu.smith.cs.csc212.lists;
 
 import me.jjfoley.adt.ArrayWrapper;
 import me.jjfoley.adt.ListADT;
+import me.jjfoley.adt.errors.RanOutOfSpaceError;
 import me.jjfoley.adt.errors.TODOErr;
 
 /**
@@ -50,13 +51,44 @@ public class GrowableList<T> extends ListADT<T> {
 
 	@Override
 	public T removeIndex(int index) {
-		// slide to the left
-		throw new TODOErr();
+		this.checkNotEmpty();
+		this.checkExclusiveIndex(index);
+		
+		T removed = this.array.getIndex(index);
+		
+
+		for (int i = index; i <fill-1; i++) {
+			this.array.setIndex(i, this.array.getIndex(i +1));
+		}
+		
+		fill--;
+
+		this.array.setIndex(fill, null);
+		return removed;
 	}
 
 	@Override
 	public void addFront(T item) {
-		addIndex(0, item);
+
+		if( this.fill < this.array.size()) {
+
+			for (int i = fill; i > 0; i--) {
+				this.array.setIndex(i, this.array.getIndex(i-1));
+				
+			}
+			fill++;
+			this.array.setIndex(0, item);
+
+		}else {
+			resizeArray();
+			
+			for (int i = fill; i > 0; i--) {
+				this.array.setIndex(i, this.array.getIndex(i-1));
+				
+			}
+			fill++;
+			this.array.setIndex(0, item);
+		}
 	}
 
 	@Override
@@ -71,14 +103,36 @@ public class GrowableList<T> extends ListADT<T> {
 	 * This private method is called when we need to make room in our GrowableList.
 	 */
 	private void resizeArray() {
-		// TODO: use this where necessary (already called in addBack!)
-		throw new TODOErr();
+
+		ArrayWrapper<T> bigger = new ArrayWrapper<>(this.array.size()*2);
+		
+		for (int i = 0; i < fill; i++) {
+			bigger.setIndex(i, this.array.getIndex(i));
+		}
+		this.array = bigger;
 	}
 
 	@Override
 	public void addIndex(int index, T item) {
-		// slide to the right
-		throw new TODOErr();
+		this.checkInclusiveIndex(index);
+		
+		if ( this.fill < this.array.size()) {		
+			for (int i = fill; i > index; i--) {
+				this.array.setIndex(i, this.array.getIndex(i - 1));
+			}
+			fill++;	
+			this.array.setIndex(index, item);
+		}else {
+			resizeArray();
+			
+			for (int i = fill; i > index; i--) {
+				this.array.setIndex(i, this.array.getIndex(i - 1));
+			}
+			fill++;	
+			this.array.setIndex(index, item);		
+			
+		}
+
 	}
 
 	@Override

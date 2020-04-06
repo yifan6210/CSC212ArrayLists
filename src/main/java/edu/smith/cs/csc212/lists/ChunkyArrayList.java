@@ -13,6 +13,8 @@ import me.jjfoley.adt.errors.TODOErr;
  * @author jfoley
  * @param <T> - the type of item stored in the list.
  */
+
+// do addIndex last 
 public class ChunkyArrayList<T> extends ListADT<T> {
 	/**
 	 * How big is each chunk?
